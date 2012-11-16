@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:gestures="de.yuv.gestures.*"
+			   minWidth="955" minHeight="600" applicationComplete= "init()" >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<gestures:Recognizer id="myRec">
+			
+		</gestures:Recognizer>
+	</fx:Declarations>
+	<s:BorderContainer id="canvasbackground" x="10" y="10" width="1050" height="400"
+					   backgroundColor="#FFFFFF"/>
+	<s:BorderContainer id="canvasdraw" x="10" y="10" width="1050" height="400"/>
+
+	<fx:Script>
+		<![CDATA[
+			import de.yuv.gestures.Recognizer;
+			import flash.display.Shape;
+			import mx.core.UIComponent;
+
+			var recordedPoints:Array = new Array;
+			var record = false;
+			
+			var headerRequest:URLRequest = new URLRequest("header.jpg");
+			var headerImage:Loader = new Loader();
+			
+			var facesRequest:URLRequest = new URLRequest("faces.jpg");
+			var facesImage:Loader = new Loader();
+			
+			var catsRequest:URLRequest = new URLRequest("blank.jpg");
+			var catsImage:Loader = new Loader();
+			
+			var drawRequest:URLRequest = new URLRequest("drawhowyoufeel.jpg");
+			var drawImage:Loader = new Loader();
+			
+		function init(){
+			
+			var g:Graphics = canvasdraw.graphics;
+			var circle1:Shape = new Shape();
+			circle1.graphics.beginFill( 0x000000, 1 );
+			circle1.graphics.drawCircle( 75, 150, 10);
+			var c:UIComponent = new UIComponent();
+			c.addChild(circle1);
+			canvasdraw.addElement( c );
+			
+			var circle2:Shape = new Shape();
+			circle2.graphics.beginFill( 0x000000, 1);
+			circle2.graphics.drawCircle( 240, 150, 10);
+			var d:UIComponent = new UIComponent();
+			d.addChild(circle2);
+			canvasdraw.addElement( d );
+			
+			
+			headerImage.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
+			headerImage.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
+			headerImage.load(headerRequest);
+			
+			facesImage.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
+			facesImage.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
+			facesImage.load(facesRequest);
+			
+			catsImage.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
+			catsImage.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
+			catsImage.load(catsRequest);
+			
+			drawImage.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
+			drawImage.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
+			drawImage.load(drawRequest);
+			
+			
+			myRec.addTemplate("happy", new Array(new Point(96, 236),  new Point(96, 240),  new Point(98, 245),  new Point(101, 252),  new Point(102, 255),  new Point(103, 258),  new Point(104, 261),  new Point(105, 264),  new Point(107, 267),  new Point(108, 270),  new Point(109, 273),  new Point(111, 276),  new Point(112, 278),  new Point(114, 280),  new Point(115, 281),  new Point(117, 283),  new Point(120, 286),  new Point(123, 288),  new Point(126, 291),  new Point(130, 294),  new Point(133, 296),  new Point(135, 297),  new Point(137, 298),  new Point(140, 299),  new Point(141, 300),  new Point(142, 300),  new Point(144, 300),  new Point(145, 300),  new Point(147, 300),  new Point(151, 300),  new Point(154, 300),  new Point(158, 299),  new Point(162, 298),  new Point(165, 296),  new Point(168, 294),  new Point(171, 293),  new Point(173, 291),  new Point(175, 289),  new Point(177, 287),  new Point(179, 285),  new Point(181, 282),  new Point(183, 281),  new Point(184, 279),  new Point(186, 277),  new Point(187, 273),  new Point(190, 267),  new Point(192, 262),  new Point(195, 257),  new Point(198, 254),  new Point(199, 253),  new Point(199, 251),  new Point(200, 251),  new Point(200, 250),  new Point(200, 249),  new Point(201, 249),  new Point(201, 247),  new Point(201, 246),  new Point(201, 245),  new Point(201, 244),  new Point(202, 242),  new Point(202, 240),  new Point(202, 237),  new Point(203, 235),  new Point(203, 234),  new Point(203, 232),  new Point(203, 231),  new Point(203, 230),  new Point(203, 229))); 			
+			myRec.addTemplate("shocked", new Array(new Point(127,141),new Point(124,140),new Point(120,139),new Point(118,139),new Point(116,139),new Point(111,140),new Point(109,141),new Point(104,144),new Point(100,147),new Point(96,152),new Point(93,157),new Point(90,163),new Point(87,169),new Point(85,175),new Point(83,181),new Point(82,190),new Point(82,195),new Point(83,200),new Point(84,205),new Point(88,213),new Point(91,216),new Point(96,219),new Point(103,222),new Point(108,224),new Point(111,224),new Point(120,224),new Point(133,223),new Point(142,222),new Point(152,218),new Point(160,214),new Point(167,210),new Point(173,204),new Point(178,198),new Point(179,196),new Point(182,188),new Point(182,177),new Point(178,167),new Point(170,150),new Point(163,138),new Point(152,130),new Point(143,129),new Point(140,131),new Point(129,136),new Point(126,139)));
+			myRec.addTemplate("sad", new Array(new Point(83, 286),  new Point(83, 284),  new Point(85, 282),  new Point(85, 279),  new Point(86, 278),  new Point(87, 277),  new Point(88, 273),  new Point(92, 269),  new Point(95, 264),  new Point(98, 258),  new Point(100, 252),  new Point(102, 249),  new Point(104, 245),  new Point(106, 242),  new Point(109, 239),  new Point(111, 237),  new Point(113, 234),  new Point(115, 232),  new Point(118, 231),  new Point(120, 230),  new Point(122, 228),  new Point(125, 226),  new Point(128, 225),  new Point(133, 222),  new Point(137, 221),  new Point(142, 220),  new Point(146, 219),  new Point(150, 218),  new Point(156, 217),  new Point(160, 217),  new Point(165, 217),  new Point(170, 217),  new Point(173, 217),  new Point(176, 217),  new Point(180, 217),  new Point(184, 217),  new Point(188, 217),  new Point(191, 217),  new Point(194, 218),  new Point(198, 219),  new Point(202, 220),  new Point(205, 222),  new Point(208, 225),  new Point(210, 225),  new Point(211, 227),  new Point(213, 228),  new Point(214, 229),  new Point(215, 231),  new Point(217, 232),  new Point(218, 234),  new Point(219, 236),  new Point(220, 238),  new Point(222, 241),  new Point(223, 244),  new Point(226, 247),  new Point(226, 249),  new Point(227, 251),  new Point(227, 252),  new Point(228, 252),  new Point(228, 253),  new Point(229, 253),  new Point(230, 255),  new Point(230, 257),  new Point(231, 259),  new Point(232, 261),  new Point(232, 262),  new Point(232, 263),  new Point(232, 264),  new Point(233, 265),  new Point(234, 266),  new Point(234, 267),  new Point(234, 269),  new Point(234, 270))); 			
+			myRec.addTemplate("apathetic", new Array(new Point(74, 252),  new Point(82, 252),  new Point(92, 252),  new Point(101, 252),  new Point(113, 252),  new Point(122, 252),  new Point(132, 252),  new Point(143, 252),  new Point(149, 252),  new Point(159, 252),  new Point(166, 252),  new Point(176, 252),  new Point(182, 252),  new Point(190, 253),  new Point(196, 253),  new Point(201, 253),  new Point(207, 253),  new Point(212, 253),  new Point(218, 253),  new Point(223, 253),  new Point(226, 253),  new Point(228, 253),  new Point(231, 253),  new Point(233, 253),  new Point(234, 253),  new Point(235, 253),  new Point(236, 253),  new Point(237, 253))); 			
+			myRec.addTemplate("silly", new Array(new Point(84, 237),  new Point(89, 237),  new Point(96, 237),  new Point(101, 237),  new Point(110, 237),  new Point(120, 237),  new Point(131, 238),  new Point(144, 238),  new Point(157, 238),  new Point(166, 238),  new Point(173, 238),  new Point(179, 238),  new Point(183, 238),  new Point(188, 238),  new Point(190, 238),  new Point(192, 238),  new Point(194, 238),  new Point(195, 238),  new Point(197, 238),  new Point(199, 238),  new Point(202, 238),  new Point(205, 238),  new Point(208, 238),  new Point(211, 238),  new Point(212, 238),  new Point(214, 238),  new Point(215, 238),  new Point(215, 239),  new Point(215, 240),  new Point(216, 242),  new Point(217, 245),  new Point(218, 250),  new Point(219, 254),  new Point(220, 258),  new Point(222, 263),  new Point(223, 267),  new Point(224, 271),  new Point(224, 273),  new Point(224, 276),  new Point(224, 279),  new Point(224, 281),  new Point(224, 285),  new Point(224, 289),  new Point(224, 292),  new Point(224, 295),  new Point(224, 297),  new Point(223, 300),  new Point(221, 303),  new Point(219, 306),  new Point(216, 309),  new Point(214, 312),  new Point(211, 314),  new Point(207, 315),  new Point(204, 316),  new Point(200, 317),  new Point(196, 318),  new Point(191, 318),  new Point(187, 318),  new Point(182, 318),  new Point(179, 318),  new Point(177, 318),  new Point(174, 318),  new Point(172, 318),  new Point(170, 318),  new Point(169, 317),  new Point(169, 315),  new Point(168, 313),  new Point(165, 310),  new Point(164, 307),  new Point(163, 305),  new Point(162, 303),  new Point(162, 301),  new Point(161, 299),  new Point(160, 297),  new Point(160, 293),  new Point(159, 288),  new Point(158, 284),  new Point(158, 280),  new Point(158, 276),  new Point(158, 274),  new Point(158, 272),  new Point(158, 271),  new Point(157, 269),  new Point(157, 268),  new Point(157, 267),  new Point(157, 265),  new Point(157, 264),  new Point(156, 262),  new Point(156, 259),  new Point(155, 258),  new Point(155, 257))); 			
+			myRec.addTemplate("confused", new Array(new Point(80, 271),  new Point(84, 272),  new Point(86, 274),  new Point(92, 276),  new Point(97, 277),  new Point(100, 278),  new Point(103, 279),  new Point(106, 279),  new Point(110, 279),  new Point(114, 279),  new Point(117, 278),  new Point(120, 277),  new Point(122, 276),  new Point(123, 275),  new Point(123, 274),  new Point(124, 273),  new Point(125, 270),  new Point(126, 265),  new Point(129, 258),  new Point(131, 253),  new Point(133, 246),  new Point(136, 241),  new Point(138, 239),  new Point(139, 237),  new Point(141, 236),  new Point(142, 235),  new Point(144, 235),  new Point(145, 235),  new Point(148, 235),  new Point(150, 235),  new Point(152, 236),  new Point(154, 237),  new Point(155, 238),  new Point(157, 239),  new Point(159, 241),  new Point(162, 244),  new Point(164, 247),  new Point(165, 250),  new Point(168, 253),  new Point(168, 257),  new Point(169, 260),  new Point(170, 264),  new Point(171, 267),  new Point(172, 270),  new Point(173, 274),  new Point(174, 275),  new Point(175, 276),  new Point(176, 276),  new Point(177, 277),  new Point(178, 277),  new Point(179, 277),  new Point(180, 277),  new Point(181, 277),  new Point(182, 277),  new Point(182, 276),  new Point(186, 273),  new Point(187, 270),  new Point(190, 267),  new Point(191, 265),  new Point(193, 262),  new Point(194, 259),  new Point(195, 257),  new Point(196, 254),  new Point(196, 252),  new Point(196, 249),  new Point(196, 248),  new Point(197, 246),  new Point(197, 244),  new Point(197, 241),  new Point(199, 236),  new Point(202, 230),  new Point(205, 226),  new Point(207, 223),  new Point(211, 221),  new Point(212, 220),  new Point(214, 220),  new Point(215, 220),  new Point(216, 220),  new Point(219, 221),  new Point(221, 222),  new Point(223, 224),  new Point(225, 226),  new Point(228, 228),  new Point(229, 230),  new Point(230, 232),  new Point(231, 235),  new Point(232, 238),  new Point(235, 245),  new Point(237, 251),  new Point(238, 257),  new Point(240, 265),  new Point(242, 271),  new Point(243, 276),  new Point(244, 279),  new Point(245, 281),  new Point(245, 283))); 			
+			
+			eventListeners();}
+			
+			public function onProgressStatus(e:ProgressEvent) {   
+				// this is where progress will be monitored     
+				//trace(e.bytesLoaded, e.bytesTotal); 
+			}
+			
+			public function onLoaderReady(e:Event) {     
+				// the image is now loaded, so let's add it to the display tree!     
+
+				var f:UIComponent = new UIComponent();
+				f.addChild(headerImage);
+				f.y = 0;
+				canvasdraw.addElement( f );
+				
+				var g:UIComponent = new UIComponent();
+				g.addChild(facesImage);
+				g.x = 300;
+				g.y = 110;
+				canvasdraw.addElement( g );
+				
+				var h:UIComponent = new UIComponent();
+				h.addChild(catsImage);
+				h.x = 610;
+				h.y = 50;
+				canvasdraw.addElement( h );
+				
+				var j:UIComponent = new UIComponent();
+				j.addChild(drawImage);
+				j.x = 50;
+				j.y = 340;
+				canvasdraw.addElement( j );
+			}
+			
+
+		
+		function eventListeners(){
+
+			stage.addEventListener ( MouseEvent.MOUSE_DOWN, handleMouseDown );
+			stage.addEventListener ( MouseEvent.MOUSE_UP, handleMouseUp );
+			stage.addEventListener ( MouseEvent.MOUSE_MOVE, handleMouseMove );
+			var record:Boolean = false;}
+		
+		function handleMouseDown(pEvt:MouseEvent){
+			trace('handleMouseDown:');
+			record = true;
+
+			recordedPoints.splice(0);
+			canvasdraw.skin.graphics.clear();
+			canvasdraw.skin.graphics.lineStyle(1, 0x990000, 1);}
+			
+		function handleMouseUp(pEvt:MouseEvent){
+			record = false;
+			var myResult = myRec.recognize(recordedPoints);
+			trace (myResult.Name);
+		
+			var res = myResult.Name;	
+			if(res == "happy"){
+				var newrequest:URLRequest = new URLRequest("happy.jpg");
+				catsImage.load(newrequest);}
+			else if(res =="sad"){
+				var newrequest:URLRequest = new URLRequest("sad.jpg");
+				catsImage.load(newrequest);}
+			else if(res =="shocked"){
+				var newrequest:URLRequest = new URLRequest("shocked.jpg");
+				catsImage.load(newrequest);}
+			else if(res =="apathetic"){
+				var newrequest:URLRequest = new URLRequest("apathetic.jpg");
+				catsImage.load(newrequest);}
+			else if(res =="silly"){
+				var newrequest:URLRequest = new URLRequest("silly.jpg");
+				catsImage.load(newrequest);}
+			else if(res =="confused"){
+				var newrequest:URLRequest = new URLRequest("confused.jpg");
+				catsImage.load(newrequest);}
+		}
+			
+		function handleMouseMove(pEvt:MouseEvent){
+			if (record){
+			trace('new Point('+pEvt.localX+", "+pEvt.localY+'), ');
+			recordedPoints.push(new Point(pEvt.localX,pEvt.localY));
+			canvasdraw.skin.graphics.drawCircle(pEvt.localX,pEvt.localY,1);}
+		}
+		function idek(){
+			var something = 1;
+		
+		}
+		]]>
+	</fx:Script>
+
+</s:Application>
